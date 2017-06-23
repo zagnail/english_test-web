@@ -6,13 +6,21 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 var publicPath = 'http://localhost:8888/public/assets';
-var cssName = process.env.NODE_ENV === 'production' ? 'style-[hash].css' : 'style.css';
+var cssName = process.env.NODE_ENV === 'production' ? 'styles-[hash].css' : 'styles.css';
 var jsName = process.env.NODE_ENV === 'production' ? 'bundle-[hash].js' : 'bundle.js';
 
 var plugins = [
   new webpack.DefinePlugin({
-    BROWSER: JSON.stringify(true),
-    NOVE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+    'process.env': {
+      BROWSER: JSON.stringify(true),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+    }
+  }),
+  new webpack.LoaderOptionsPlugin({
+    debug: process.env.NODE_ENV !== 'production',
+    options: {
+      eslint: { configFile: '.eslintrc' }
+    }
   }),
   new ExtractTextPlugin(cssName)
 ];
@@ -37,14 +45,7 @@ module.exports = {
     ], 
     extensions: ['.js', '.jsx']
   },
-  plugins: [
-    new webpack.LoaderOptionsPlugin({
-      debug: process.env.NODE_ENV !== 'production',
-      options: {
-        eslint: { configFile: '.eslintrc' }
-      }
-    })
-  ],
+  plugins,
   output: {
     path: path.join(__dirname, './public/assets/'),
     filename: jsName,
@@ -54,20 +55,24 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
           'css-loader', 
           'postcss-loader'
-        ]
+          ]
+        })
       },
       {
         test: /\.less$/,
-        use: [
-          'style-loader',
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
           'css-loader', 
           'postcss-loader', 
           'less-loader'
-        ]
+          ]
+        })
       },
       { test: /\.gif$/, loader: 'url-loader?limit=10000&mimetype=image/gif' },
       { test: /\.jpg$/, loader: 'url-loader?limit=10000&mimetype=image/jpg' },
@@ -76,11 +81,8 @@ module.exports = {
       { test: /\.(woff|woff2|ttf|eof)/, loader: 'url-loader?limit=1' },
       { 
         test: /\.jsx?$/, 
-        use: [
-          'babel-loader',
-          'eslint-loader'
-        ], 
-        exclude: [/node_modules/, /public/] 
+        use: ['babel-loader', 'eslint-loader'],
+        exclude: [/node_modules/, /public/],
       },
       { test: /\.json$/, loader: 'json-loader' },
     ]
