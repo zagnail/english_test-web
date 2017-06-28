@@ -8,6 +8,8 @@ import configureStore from './redux/configureStore';
 
 import routes from './routes';
 
+import DevTools from './components/DevTools';
+
 const store = configureStore();
 
 const component = (
@@ -19,3 +21,4 @@ const component = (
 );
 
 ReactDOM.render(component, document.getElementById('react-view'));
+ReactDOM.render(<DevTools store={store} />, document.getElementById('dev-tools'));
