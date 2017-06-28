@@ -2,6 +2,11 @@ import express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { StaticRouter } from 'react-router';
+
+import { Provider } from 'react-redux';
+
+import configureStore from './redux/configureStore';
+
 import routes from './routes';
 import App from './components/App'
 
@@ -9,12 +14,15 @@ const app = express();
 
 app.use((req, res) => {
 
+  const store = configureStore();
   // This is contet object contains the result of the render
   const context = {};
   const html = ReactDOM.renderToString(
-    <StaticRouter location={req.url} context={context}>
-      <App />
-    </StaticRouter>
+    <Provider store={store}>
+      <StaticRouter location={req.url} context={context}>
+        <App />
+      </StaticRouter>
+    </Provider>
   );
 
   res.status(200).send(renderHTML(html));

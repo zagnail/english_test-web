@@ -1,14 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+
+import { Provider } from 'react-redux';
+
+import configureStore from './redux/configureStore';
+
 import routes from './routes';
 
-// ReactDOM.render(<App />, document.getElementById('react-view'));
+const store = configureStore();
 
 const component = (
-  <BrowserRouter>
-    {routes}
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      {routes}
+    </BrowserRouter>
+  </Provider>
 );
 
 ReactDOM.render(component, document.getElementById('react-view'));
