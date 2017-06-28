@@ -1,14 +1,23 @@
 import express from 'express';
 import React from 'react';
-import ReactDom from 'react-dom/server';
-import App from 'components/App';
+import ReactDOM from 'react-dom/server';
+import { StaticRouter } from 'react-router';
+import routes from './routes';
+import App from './components/App'
 
 const app = express();
 
 app.use((req, res) => {
-  const componentHTML = ReactDom.renderToString(<App />);
 
-  return res.end(renderHTML(componentHTML));
+  // This is contet object contains the result of the render
+  const context = {};
+  const html = ReactDOM.renderToString(
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  );
+
+  res.status(200).send(renderHTML(html));
 });
 
 const assetUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:8888' : '/';
