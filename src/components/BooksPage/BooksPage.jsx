@@ -38,10 +38,10 @@ class BooksPage extends Component {
     const books = this.props.books;
 
     if (books) {
-      console.log('books', books.books);
-
       return books.books.map((book, i) => {
-        return <ListGroupItem key={i}>{ book.name }</ListGroupItem>;
+        return (
+          <ListGroupItem key={i} href={`/books/${book.id}`}>{ book.name }</ListGroupItem>
+        );
       });
     }
 

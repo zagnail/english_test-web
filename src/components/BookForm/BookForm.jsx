@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 
 const propTypes = {
   handleSubmit: PropTypes.func,
-  book: PropTypes.func
+  book: PropTypes.func,
+  type: PropTypes.string
 };
 
 let BookForm = class BookForm extends Component {

@@ -1,3 +1,3 @@
-import BookForm from 'BookForm';
+import BookForm from './BookForm';
 
 export default BookForm;
