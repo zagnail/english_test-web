@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux';
-import counterReducer from './counterReducer';
-import timeReducer from './timeReducer';
+
+import { reducer as form } from 'redux-form';
+import authReducer from './authReducer';
+import bookReducer from './bookReducer';
 
 export default combineReducers({
-  counter: counterReducer,
-  time: timeReducer
+  form,
+  auth: authReducer,
+  book: bookReducer
 });
